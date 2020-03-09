@@ -52,14 +52,18 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        linked_pair = LinkedPair(key, value)
         existing = self.storage[index]
         if existing:
-            while existing.next:
+            while existing:
+                if existing.key == key:
+                    existing.value = value
+                    return
+                if not existing.next:
+                    existing.next = LinkedPair(key, value)
+                    return
                 existing = existing.next
-            existing.next = linked_pair
         else:
-            self.storage[index] = linked_pair
+            self.storage[index] = LinkedPair(key, value)
 
     def remove(self, key):
         '''
@@ -107,7 +111,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old_storage = self.storage
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
+        for i in range(0, len(old_storage)):
+            node = old_storage[i]
+            while node:
+                self.insert(node.key, node.value)
+                node = node.next
 
 
 if __name__ == "__main__":
