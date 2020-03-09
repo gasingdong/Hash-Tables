@@ -51,7 +51,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        linked_pair = LinkedPair(key, value)
+        existing = self.storage[index]
+        if existing:
+            while existing.next:
+                existing = existing.next
+            existing.next = linked_pair
+        else:
+            self.storage[index] = linked_pair
 
     def remove(self, key):
         '''
@@ -61,7 +69,20 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        existing = self.storage[index]
+        prev_node = None
+        while existing:
+            if existing.key == key:
+                if prev_node:
+                    prev_node.next = existing.next
+                else:
+                    self.storage[index] = existing.next
+                return
+            else:
+                prev_node = existing
+                existing = existing.next
+        print(f"KeyError: {key} not found!")
 
     def retrieve(self, key):
         '''
@@ -71,7 +92,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        existing = self.storage[index]
+        while existing:
+            if existing.key == key:
+                return existing.value
+            existing = existing.next
+        return None
 
     def resize(self):
         '''
